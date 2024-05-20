@@ -48,13 +48,16 @@ export class CarsController extends ResponseHelper {
 
   create = async (req: Request, res: Response) => {
     try {
+      const optionsJson = JSON.stringify(req.body.options);
+      const specsJson = JSON.stringify(req.body.specs);
       const gambar = await uploadImageToCloudinary(req.file, "cars");
       const cars = await CarsModel.query().insert({
         ...req.body,
         image: gambar.secure_url,
         image_public_id: gambar.public_id,
+        options: optionsJson,
+        specs: specsJson,
       });
-      console.log(gambar);
 
       return this.success("Data berhasil ditambahkan", cars, 200)(res);
     } catch (error: Error | any) {
@@ -65,6 +68,8 @@ export class CarsController extends ResponseHelper {
   update = async (req: Request, res: Response) => {
     try {
       const id: string = req.params.id;
+      const optionsJson = JSON.stringify(req.body.options);
+      const specsJson = JSON.stringify(req.body.specs);
       const carByid = await CarsModel.query().findById(id);
       if (carByid?.image) {
         deleteImageFromCloudinary(carByid.image_public_id);
@@ -75,6 +80,8 @@ export class CarsController extends ResponseHelper {
         ...req.body,
         image: gambar.secure_url,
         image_public_id: gambar.public_id,
+        options: optionsJson,
+        specs: specsJson,
       });
       if (!cars) return this.error("Data tidak ditemukan", null, 404)(res);
       return this.success(
