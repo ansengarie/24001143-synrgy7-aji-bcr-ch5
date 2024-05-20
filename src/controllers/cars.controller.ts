@@ -50,10 +50,7 @@ export class CarsController extends ResponseHelper {
     try {
       const gambar = await uploadImageToCloudinary(req.file, "cars");
       const cars = await CarsModel.query().insert({
-        name: req.body.name,
-        type: req.body.type,
-        price: req.body.price,
-        size: req.body.size,
+        ...req.body,
         image: gambar.secure_url,
         image_public_id: gambar.public_id,
       });
@@ -75,10 +72,7 @@ export class CarsController extends ResponseHelper {
       const gambar = await uploadImageToCloudinary(req.file, "cars");
 
       const cars = await CarsModel.query().patchAndFetchById(id, {
-        name: req.body.name,
-        type: req.body.type,
-        price: req.body.price,
-        size: req.body.size,
+        ...req.body,
         image: gambar.secure_url,
         image_public_id: gambar.public_id,
       });
